@@ -2,13 +2,13 @@ import React from "react";
 
 const InputForm = ({ prompt, setPrompt }) => {
   return (
-    <div className="input-form">
-      <label htmlFor="prompt-input">프롬프트 입력:</label>
+    <div className="flex flex-col">
+      <label htmlFor="prompt-input">텍스트 입력</label>
       <textarea
-        id="prompt-input"
+        className="w-full textarea"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
-        placeholder="예: a futuristic cityscape..."
+        placeholder="파란머리의 소녀"
       />
     </div>
   );
