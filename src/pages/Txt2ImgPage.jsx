@@ -11,7 +11,7 @@ const Txt2ImgPage = () => {
   // const base_img_path = "/unnamed.png"
 
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState("default");
+  const [model, setModel] = useState("base");
   const [lora, setLora] = useState("none");
   const [advancedOptions, setAdvancedOptions] = useState({
     negative_prompt: "",
@@ -27,12 +27,12 @@ const Txt2ImgPage = () => {
     setLoading(true);
     setGeneratedImage(null);
     try {
-      const response = await axios.post('http://localhost:8000/generate', {
+      const response = await axios.post('http://localhost:8000/txt2img', {
         prompt,
         model,
         lora,
         negative_prompt: advancedOptions.negative_prompt,
-        steps: advancedOptions.inference_steps,
+        inference_steps: advancedOptions.inference_steps,
         guidance_scale: advancedOptions.guidance_scale,
         clip_skip: advancedOptions.clip_skip,
       }, { responseType: 'blob' }); // 이미지 파일 받기
