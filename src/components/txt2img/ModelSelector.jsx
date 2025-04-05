@@ -9,8 +9,8 @@ const ModelSelector = ({ model, setModel }) => {
         value={model}
         onChange={(e) => setModel(e.target.value)}
       >
-        <option value="default">기본 모델</option>
-        <option value="model2">모델 2</option>
+        <option value="base">Stable Diffusion 1.5</option>
+        <option value="DreamShaper">DreamShaper</option>
         {/* 향후 모델 추가 */}
       </select>
     </div>
