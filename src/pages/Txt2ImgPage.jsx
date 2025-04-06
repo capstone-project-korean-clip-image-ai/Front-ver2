@@ -37,7 +37,9 @@ const Txt2ImgPage = () => {
         clip_skip: advancedOptions.clip_skip,
       }, { responseType: 'blob' }); // 이미지 파일 받기
 
+      console.log(response.data)
       const imageUrl = URL.createObjectURL(response.data);
+      console.log(imageUrl)
       setGeneratedImage(imageUrl);
     } catch (error) {
       console.error('이미지 생성 오류:', error);
@@ -46,8 +48,8 @@ const Txt2ImgPage = () => {
   };
 
   return (
-    <main className="flex flex-col max-w-screen-lg gap-4 p-4 mx-auto lg:flex-row">
-      <div className="relative flex-1 p-4 space-y-4 shadow-md felx-col bg-slate-500 rounded-xl">
+    <main className="flex flex-col max-w-screen-lg gap-4 p-4 mx-auto sm:flex-row">
+      <div className="relative flex-1 p-4 space-y-4 border shadow-md felx-col">
         <InputForm prompt={prompt} setPrompt={setPrompt} />
         <ModelSelector model={model} setModel={setModel} />
         <LoraSelector lora={lora} setLora={setLora} />
@@ -66,7 +68,7 @@ const Txt2ImgPage = () => {
             {loading ? "이미지 생성 중..." : "이미지 생성"}
           </button>
       </div>
-      <div className="flex-1 p-4 bg-white shadow-md rounded-xl">
+      <div className="flex-1 p-4 border shadow-md">
         {generatedImage && <ImageDisplay image={generatedImage} />}
       </div>
     </main>
