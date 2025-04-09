@@ -49,7 +49,7 @@ const Txt2ImgPage = () => {
 
   return (
     <main className="flex flex-col max-w-screen-lg gap-4 p-4 mx-auto sm:flex-row">
-      <div className="relative flex-1 p-4 space-y-4 border shadow-md felx-col">
+      <div className="relative flex-1 p-4 space-y-4 border shadow-md flex-col">
         <InputForm prompt={prompt} setPrompt={setPrompt} />
         <ModelSelector model={model} setModel={setModel} />
         <LoraSelector lora={lora} setLora={setLora} />
