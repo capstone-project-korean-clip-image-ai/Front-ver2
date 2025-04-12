@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import InputForm from "../components/txt2img/InputForm";
 import ModelSelector from "../components/txt2img/ModelSelector";
 import LoraSelector from "../components/txt2img/LoraSelector";
@@ -8,8 +8,6 @@ import ImageDisplay from "../components/txt2img/ImageDisplay";
 
 const Txt2ImgPage = () => {
   const base_img_path = "/sample.jpeg"
-  // const base_img_path = "/unnamed.png"
-
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("base");
   const [lora, setLora] = useState("none");
@@ -20,14 +18,15 @@ const Txt2ImgPage = () => {
     clip_skip: 0,
   });
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [generatedImage, setGeneratedImage] = useState(base_img_path);
+  const [imageUrls, setImageUrls] = useState(Array(4).fill(base_img_path));
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
     setLoading(true);
-    setGeneratedImage(null);
+    setImageUrls([]); // 기존 이미지 초기화
+
     try {
-      const response = await axios.post('http://localhost:8000/txt2img', {
+      const response = await axios.post("http://localhost:8000/txt2img", {
         prompt,
         model,
         lora,
@@ -35,41 +34,48 @@ const Txt2ImgPage = () => {
         inference_steps: advancedOptions.inference_steps,
         guidance_scale: advancedOptions.guidance_scale,
         clip_skip: advancedOptions.clip_skip,
-      }, { responseType: 'blob' }); // 이미지 파일 받기
+      });
 
-      console.log(response.data)
-      const imageUrl = URL.createObjectURL(response.data);
-      console.log(imageUrl)
-      setGeneratedImage(imageUrl);
+      console.log("받은 presigned URL 목록:", response.data.urls);
+      setImageUrls(response.data.urls); // 4장 presigned URL 저장
     } catch (error) {
-      console.error('이미지 생성 오류:', error);
+      console.error("이미지 생성 오류:", error);
     }
+
     setLoading(false);
   };
 
   return (
     <main className="flex flex-col max-w-screen-lg gap-4 p-4 mx-auto sm:flex-row">
-      <div className="relative flex-1 p-4 space-y-4 border shadow-md flex-col">
+      {/* 왼쪽: 입력 폼 */}
+      <div className="relative flex-col flex-1 p-4 space-y-4 border shadow-md">
         <InputForm prompt={prompt} setPrompt={setPrompt} />
         <ModelSelector model={model} setModel={setModel} />
         <LoraSelector lora={lora} setLora={setLora} />
+
         <button onClick={() => setShowAdvanced((prev) => !prev)}>
           {showAdvanced ? "고급 옵션 숨기기" : "고급 옵션 보기"}
         </button>
-        <div>
+
         {showAdvanced && (
           <AdvancedSettings
             advancedOptions={advancedOptions}
             setAdvancedOptions={setAdvancedOptions}
           />
         )}
-        </div>
-          <button className="absolute btn btn-success right-4 bottom-4" onClick={handleGenerate} disabled={loading}>
-            {loading ? "이미지 생성 중..." : "이미지 생성"}
-          </button>
+
+        <button
+          className="absolute btn btn-success right-4 bottom-4"
+          onClick={handleGenerate}
+          disabled={loading}
+        >
+          {loading ? "이미지 생성 중..." : "이미지 생성"}
+        </button>
       </div>
+
+      {/* 오른쪽: 이미지 출력 */}
       <div className="flex-1 p-4 border shadow-md">
-        {generatedImage && <ImageDisplay image={generatedImage} />}
+        <ImageDisplay image={imageUrls} />
       </div>
     </main>
   );
