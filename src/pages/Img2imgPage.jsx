@@ -5,16 +5,17 @@ import ObjectSelection from "../components/img2img/ObjectSelection";
 import ImageDisplay from "../components/txt2img/ImageDisplay";
 
 const Img2ImgPage = () => {
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState([]);
   const [detectedObjects, setDetectedObjects] = useState([]);
   const [selectedObject, setSelectedObject] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [generatedImage, setGeneratedImage] = useState(null);
+  const [EditedImage, setEditedImage] = useState(null);
 
+  // 업로드한 이미지 객체 탐지 
   const handleDetect = async (file, coords) => {
     if (!file || !coords) return;
 
-    setUploadedImage(file);
+    setUploadedImage(file)
     setLoading(true);
     try {
       const upload_image = new FormData();
@@ -24,12 +25,9 @@ const Img2ImgPage = () => {
 
       // 업로드한 이미지 SAM으로 객체 탐지 후, 탐지한 사진 경로 반환
       const obj_detect = await axios.post("http://localhost:8000/img2img/object_detect", upload_image);
-      const obj_paths = obj_detect.data[1]
-
-      // 디버깅 로그 추가
-      // console.log("Axios 응답 전체:", obj_detect);
-      // console.log("받은 객체 목록:", obj_paths);
-
+      // console.log(obj_detect);
+      const obj_paths = obj_detect.data[1];
+      
       const imageUrls = [];
 
       for (let i=0; i<obj_paths.length; i++) {
@@ -40,10 +38,10 @@ const Img2ImgPage = () => {
         });
 
         // Blob을 URL로 변환하여 배열에 저장
-        console.log(obj_img);
+        // console.log(obj_img);
         const imgUrl = URL.createObjectURL(obj_img.data);
         imageUrls.push(imgUrl);
-        console.log(`받은 이미지 URL: ${imgUrl}`);
+        // console.log(`받은 이미지 URL: ${imgUrl}`);
       }
       // console.log(imageUrls);
       setDetectedObjects(imageUrls);
@@ -55,23 +53,52 @@ const Img2ImgPage = () => {
     }
   };
 
-  const handleObjectSelect = (object) => {
-    setSelectedObject(object);
-    // console.log(uploadedImage);
-    console.log(object);
+  // 선택 영역 지우기
+  const handleObjectErase = async (object) => {
+    if(!object) return;
+
+     // blob URL -> Blob 객체
+    const response = await fetch(object);
+    const blob = await response.blob();
+
+    // Blob -> File
+    const object_file = new File([blob], "object.jpg", { type: blob.type });
+    console.log(uploadedImage, object_file);
+
+    setLoading(true);
+
+    try {
+      const erase_image = new FormData();
+      erase_image.append("image", uploadedImage);
+      erase_image.append("object", object_file);
+
+      const erase_response = await axios.post("http://localhost:8000/img2img/erase_object", erase_image);
+      console.log("받은 presigned URL:", erase_response.data.image_url);
+      setEditedImage(erase_response.data.image_url);
+    } catch (error) {
+      console.error("객체 지우기 오류:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex flex-col h-70vh max-w-screen-2xl gap-4 p-4 mx-auto sm:flex-row">
+    <div className="flex flex-col gap-4 p-4 mx-auto h-70vh max-w-screen-2xl sm:flex-row">
         <div className="relative flex-1">
           <ImageUploader onDetect={handleDetect} loading={loading} />
         </div>
         <div className="relative flex-1">
-          <ObjectSelection objects={detectedObjects} onSelect={handleObjectSelect} />
+          <ObjectSelection objects={detectedObjects} onErase={handleObjectErase} />
         </div>
         <div className="relative flex-1">
-          <div className="border">
-            <p>수정된 이미지 </p>
+          <div className="flex flex-col gap-4 mt-4">
+            <div className="w-full max-w-xl p-4 border">
+                <p>수정된 이미지 </p>
+                <img
+                  src={EditedImage}
+                  alt={``}
+                />
+            </div>
           </div>
         </div>
     </div>

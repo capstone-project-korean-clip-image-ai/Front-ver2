@@ -93,23 +93,23 @@ const ImageUploader = ({ onDetect, loading }) => {
   };
 
   return (
-    <div className="p-4 border w-full max-w-xl">
+    <div className="w-full max-w-xl p-4 border">
       <label className="block mb-2 font-semibold">이미지 업로드</label>
       <input
         type="file"
         accept="image/*"
         onChange={handleChange}
         disabled={loading}
-        className="file-input file-input-bordered w-full max-w-xs"
+        className="w-full max-w-xs file-input file-input-bordered"
       />
       {loading && <p className="mt-2 text-sm text-gray-500">업로드 중...</p>}
 
       {image?.src && (
-        <div className="mt-4 flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mt-4">
           <p className="text-sm">수정하고 싶은 영역을 클릭해주세요</p>
           <div
             ref={containerRef}
-            className="relative w-full aspect-square border border-gray-400 bg-gray-100 cursor-crosshair"
+            className="relative w-full bg-gray-100 border border-gray-400 aspect-square cursor-crosshair"
             onClick={handleImageClick}
           >
             <img
@@ -120,7 +120,7 @@ const ImageUploader = ({ onDetect, loading }) => {
             />
 
             <div
-              className="absolute w-3 h-3 bg-red-500 rounded-full border border-white"
+              className="absolute w-3 h-3 bg-red-500 border border-white rounded-full"
               style={
                 marker
                   ? {
@@ -139,7 +139,7 @@ const ImageUploader = ({ onDetect, loading }) => {
           </div>
 
           <button
-            className="btn btn-success self-end"
+            className="self-end btn btn-success"
             onClick={handleDetectClick}
           >
             객체 탐지

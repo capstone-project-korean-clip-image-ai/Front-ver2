@@ -1,12 +1,25 @@
 import React, { useState } from "react";
 
-const ObjectSelection = ({ objects, onSelect }) => {
+const ObjectSelection = ({ objects, onErase }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedObject, setSelectedObject] = useState(null);
 
-  const handleClick = (object, index) => {
+  // 클릭한 사진 
+  const handleObjClick = (object, index) => {
     setSelectedIndex(index);
-    onSelect(object);
+    setSelectedObject(object);
   };
+
+  const handleEraseCLick = () => {
+    console.log(`${selectedObject}, ${selectedIndex}`)
+
+    if(selectedObject == null || selectedIndex == null){
+      alert("수정할 영역을 선택해주세요!");
+      return;
+    }
+
+    onErase?.(selectedObject);
+  }
 
   return (
     <div className="p-4 border">
@@ -18,7 +31,7 @@ const ObjectSelection = ({ objects, onSelect }) => {
             {objects.map((object, index) => (
               <div
                 key={index}
-                onClick={() => handleClick(object, index)}
+                onClick={() => handleObjClick(object, index)}
                 className={`cursor-pointer p-2 border hover:border-2 hover:border-gray-700 ${
                   selectedIndex === index ? "ring-4 ring-warning" : ""
                 }`}
@@ -31,7 +44,7 @@ const ObjectSelection = ({ objects, onSelect }) => {
               </div>
             ))}
           </div>
-          <button className="btn btn-success self-end mt-2">영역 지우기</button>
+          <button className="self-end mt-2 btn btn-success" onClick={handleEraseCLick}>영역 지우기</button>
         </div>
       ) : (
         <p>탐지된 객체가 없습니다.</p>
