@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import ImageUploader from "../components/img2img/ImageUploader";
 import ObjectSelection from "../components/img2img/ObjectSelection";
 import ImageDisplay from "../components/txt2img/ImageDisplay";
@@ -11,11 +11,11 @@ const Img2ImgPage = () => {
   const [loading, setLoading] = useState(false);
   const [EditedImage, setEditedImage] = useState(null);
 
-  // 업로드한 이미지 객체 탐지 
+  // 업로드한 이미지 객체 탐지
   const handleDetect = async (file, coords) => {
     if (!file || !coords) return;
 
-    setUploadedImage(file)
+    setUploadedImage(file);
     setLoading(true);
     try {
       const upload_image = new FormData();
@@ -24,18 +24,24 @@ const Img2ImgPage = () => {
       upload_image.append("y", coords.y);
 
       // 업로드한 이미지 SAM으로 객체 탐지 후, 탐지한 사진 경로 반환
-      const obj_detect = await axios.post("http://localhost:8000/img2img/object_detect", upload_image);
+      const obj_detect = await axios.post(
+        "http://localhost:8000/img2img/object_detect",
+        upload_image,
+      );
       // console.log(obj_detect);
       const obj_paths = obj_detect.data[1];
-      
+
       const imageUrls = [];
 
-      for (let i=0; i<obj_paths.length; i++) {
+      for (let i = 0; i < obj_paths.length; i++) {
         // 이미지 경로를 파라미터로 전송
-        const obj_img = await axios.get(`http://localhost:8000/img2img/detected_image`, {
-          params: { image_path: obj_paths[i] },
-          responseType: "blob",
-        });
+        const obj_img = await axios.get(
+          `http://localhost:8000/img2img/detected_image`,
+          {
+            params: { image_path: obj_paths[i] },
+            responseType: "blob",
+          },
+        );
 
         // Blob을 URL로 변환하여 배열에 저장
         // console.log(obj_img);
@@ -55,9 +61,9 @@ const Img2ImgPage = () => {
 
   // 선택 영역 지우기
   const handleObjectErase = async (object) => {
-    if(!object) return;
+    if (!object) return;
 
-     // blob URL -> Blob 객체
+    // blob URL -> Blob 객체
     const response = await fetch(object);
     const blob = await response.blob();
 
@@ -72,7 +78,10 @@ const Img2ImgPage = () => {
       erase_image.append("image", uploadedImage);
       erase_image.append("object", object_file);
 
-      const erase_response = await axios.post("http://localhost:8000/img2img/erase_object", erase_image);
+      const erase_response = await axios.post(
+        "http://localhost:8000/img2img/erase_object",
+        erase_image,
+      );
       console.log("받은 presigned URL:", erase_response.data.image_url);
       setEditedImage(erase_response.data.image_url);
     } catch (error) {
@@ -84,23 +93,23 @@ const Img2ImgPage = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4 mx-auto h-70vh max-w-screen-2xl sm:flex-row">
-        <div className="relative flex-1">
-          <ImageUploader onDetect={handleDetect} loading={loading} />
-        </div>
-        <div className="relative flex-1">
-          <ObjectSelection objects={detectedObjects} onErase={handleObjectErase} />
-        </div>
-        <div className="relative flex-1">
-          <div className="flex flex-col gap-4 mt-4">
-            <div className="w-full max-w-xl p-4 border">
-                <p>수정된 이미지 </p>
-                <img
-                  src={EditedImage}
-                  alt={``}
-                />
-            </div>
+      <div className="relative flex-1">
+        <ImageUploader onDetect={handleDetect} loading={loading} />
+      </div>
+      <div className="relative flex-1">
+        <ObjectSelection
+          objects={detectedObjects}
+          onErase={handleObjectErase}
+        />
+      </div>
+      <div className="relative flex-1">
+        <div className="flex flex-col gap-4 mt-4">
+          <div className="w-full max-w-xl p-4 border">
+            <p>수정된 이미지 </p>
+            <img src={EditedImage} alt={``} />
           </div>
         </div>
+      </div>
     </div>
   );
 };

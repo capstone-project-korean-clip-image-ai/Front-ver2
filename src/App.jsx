@@ -6,11 +6,11 @@ import Header from "./layout/Header";
 const App = () => {
   return (
     <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Txt2ImgPage />} />
-          <Route path="/img2img" element={<Img2ImgPage />} />
-        </Routes>
+      <Header/>
+      <Routes>
+        <Route path="/" element={<Txt2ImgPage />} />
+        <Route path="/img2img" element={<Img2ImgPage />} />
+      </Routes>
     </Router>
   );
 };

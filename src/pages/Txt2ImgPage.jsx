@@ -7,7 +7,7 @@ import AdvancedSettings from "../components/txt2img/AdvancedSettings";
 import ImageDisplay from "../components/txt2img/ImageDisplay";
 
 const Txt2ImgPage = () => {
-  const base_img_path = "/sample.jpeg"
+  const base_img_path = "/sample.jpeg";
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("base");
   const [lora, setLora] = useState("none");
