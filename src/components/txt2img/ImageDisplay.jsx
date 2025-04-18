@@ -8,7 +8,7 @@ const ImageDisplay = ({ image }) => {
           key={index}
           src={url}
           alt={`생성된 이미지 ${index + 1}`}
-          className="border shadow"
+          className="border shadow-2xs"
         />
       ))}
     </div>

@@ -18,7 +18,10 @@ const EditOptions = ({ onErase, onRedraw }) => {
             onChange={(e) => setPrompt(e.target.value)}
             className="input input-bordered"
           />
-          <button onClick={() => onRedraw(prompt)} className="ml-2 btn btn-success">
+          <button
+            onClick={() => onRedraw(prompt)}
+            className="ml-2 btn btn-success"
+          >
             선택 영역 새로 그리기
           </button>
         </div>

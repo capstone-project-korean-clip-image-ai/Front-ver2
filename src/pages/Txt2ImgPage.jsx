@@ -7,7 +7,7 @@ import AdvancedSettings from "../components/txt2img/AdvancedSettings";
 import ImageDisplay from "../components/txt2img/ImageDisplay";
 
 const Txt2ImgPage = () => {
-  const base_img_path = "/sample.jpeg"
+  const base_img_path = "/sample.jpeg";
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("base");
   const [lora, setLora] = useState("none");
@@ -46,7 +46,7 @@ const Txt2ImgPage = () => {
   };
 
   return (
-    <main className="flex flex-col max-w-screen-lg gap-4 p-4 mx-auto sm:flex-row">
+    <main className="flex flex-col max-w-(--breakpoint-lg) gap-4 p-4 mx-auto sm:flex-row">
       {/* 왼쪽: 입력 폼 */}
       <div className="relative flex-col flex-1 p-4 space-y-4 border shadow-md">
         <InputForm prompt={prompt} setPrompt={setPrompt} />
