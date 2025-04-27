@@ -3,59 +3,36 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="w-full shadow-lg navbar bg-base-100">
-      <div className="flex items-center justify-between w-full max-w-(--breakpoint-xl) px-4 mx-auto">
-        <div className="flex-1">
-          <a className="text-xl normal-case btn btn-ghost">KLIP</a>
+    <header className="w-full bg-[#121212] border-b border-zinc-800 text-white shadow-md">
+      <div className="flex items-center justify-between w-full px-6 h-16">
+        {/* 좌측: 로고 */}
+        <div className="text-xl font-bold tracking-wide">
+          KLIP
         </div>
-        {/* 가로 메뉴 (큰 화면) */}
-        <div className="flex-none hidden lg:block">
-          <ul className="p-0 menu menu-horizontal">
-            <li>
-              <Link to="/">이미지 생성</Link>
-            </li>
-            <li>
-              <Link to="/img2img">이미지 수정</Link>
-            </li>
-            <li>
-              <Link to="/community">게시판</Link>
-            </li>
-          </ul>
-        </div>
-        {/* 드롭다운 메뉴 (작은 화면) */}
-        <div className="flex-none lg:hidden">
-          <div className="dropdown dropdown-end">
-            <button className="btn btn-square btn-ghost">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block w-5 h-5 stroke-current"
-              >
-                {" "}
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>{" "}
-              </svg>
-            </button>
-            <ul
-              tabIndex={0}
-              className="p-2 mt-3 shadow-2xs menu dropdown-content bg-base-100 rounded-box w-52"
+
+        {/* 모바일 전용 드롭다운 메뉴 */}
+        <div className="lg:hidden dropdown dropdown-end">
+          <label tabIndex={0} className="btn btn-ghost btn-sm text-xs">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <li>
-                <Link to="/">이미지 생성</Link>
-              </li>
-              <li>
-                <Link to="/img2img">이미지 수정</Link>
-              </li>
-              <li>
-                <Link to="/community">게시판</Link>
-              </li>
-            </ul>
-          </div>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu dropdown-content mt-3 z-[1] p-2 shadow-lg bg-[#1f1f1f] border border-zinc-700 rounded-lg w-40"
+          >
+            <li><Link to="/">Generate</Link></li>
+            <li><Link to="/img2img">Edit</Link></li>
+            <li><Link to="/effects">Effects</Link></li>
+            <li><Link to="/community">Community</Link></li>
+            <li><Link to="/mypage">MyPage</Link></li>
+          </ul>
         </div>
       </div>
     </header>

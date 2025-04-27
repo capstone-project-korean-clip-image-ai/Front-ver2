@@ -5,13 +5,15 @@ import Header from "./layout/Header";
 
 const App = () => {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Txt2ImgPage />} />
-        <Route path="/img2img" element={<Img2ImgPage />} />
-      </Routes>
-    </Router>
+    <div className="min-h-screen bg-[#0c0c0c] text-white">
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Txt2ImgPage />} />
+          <Route path="/img2img" element={<Img2ImgPage />} />
+        </Routes>
+      </Router>
+    </div>
   );
 };
 

@@ -1,16 +1,13 @@
 const ImageDisplay = ({ image }) => {
-  if (!image || image.length === 0) return <p>생성된 이미지가 없습니다.</p>;
+  if (!image) return <p>이미지가 없습니다.</p>;
 
   return (
-    <div className="grid grid-cols-4 gap-4">
-      {image.map((url, index) => (
-        <img
-          key={index}
-          src={url}
-          alt={`생성된 이미지 ${index + 1}`}
-          className="border shadow-2xs"
-        />
-      ))}
+    <div className="w-full overflow-hidden rounded-lg border border-zinc-700 shadow-md bg-[#0c0c0c]">
+      <img
+        src={image}
+        alt="생성된 이미지"
+        className="object-contain w-full h-full"
+      />
     </div>
   );
 };
