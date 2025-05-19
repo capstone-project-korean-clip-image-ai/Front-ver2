@@ -11,6 +11,7 @@ Currently, two official plugins are available:
 
 If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
+
 ```
 Front
 ├─ .prettierrc
@@ -36,6 +37,8 @@ Front
 │  │  │  ├─ GenerateParamsBlock.jsx
 │  │  │  ├─ imageParams
 │  │  │  │  ├─ AdvancedSettings.jsx
+│  │  │  │  ├─ ImgNumSelector.jsx
+│  │  │  │  ├─ ImgRaitoSelector.jsx
 │  │  │  │  ├─ InputForm.jsx
 │  │  │  │  ├─ LoraSelector.jsx
 │  │  │  │  └─ ModelSelector.jsx
@@ -49,13 +52,21 @@ Front
 │  │  └─ layout
 │  │     ├─ ImageLog.jsx
 │  │     └─ Sidebar.jsx
+│  ├─ hooks
+│  │  ├─ useGenerateImg2Img.js
+│  │  ├─ useGenerateTxt2Img.js
+│  │  ├─ useImageLogs.js
+│  │  ├─ useInpaint.js
+│  │  └─ useObjectDetect.js
 │  ├─ index.css
 │  ├─ main.jsx
-│  └─ pages
-│     ├─ GenerateLayout.jsx
-│     ├─ Img2ImgMain.jsx
-│     ├─ InpaintMain.jsx
-│     └─ Txt2ImgMain.jsx
+│  ├─ pages
+│  │  ├─ GenerateLayout.jsx
+│  │  ├─ Img2ImgMain.jsx
+│  │  ├─ InpaintMain.jsx
+│  │  └─ Txt2ImgMain.jsx
+│  └─ services
+│     └─ api.js
 └─ vite.config.js
 
 ```
