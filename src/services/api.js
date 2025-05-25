@@ -37,6 +37,18 @@ export const generateImg2ImgPose = (formData) =>
     headers: { "Content-Type": "multipart/form-data" },
   });
 
+// Img2Img style
+export const generateImg2ImgStyle = (formData) =>
+  api.post("/img2img/style", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+// Img2Img face
+export const generateImg2ImgFace = (formData) =>
+  api.post("/img2img/face", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
 // get all images
 export const fetchImageLogs = () => api.get("/logs");
 

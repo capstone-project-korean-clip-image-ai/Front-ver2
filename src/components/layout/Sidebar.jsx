@@ -2,22 +2,14 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   const menu = [
-    { path: "/txt2img", label: "이미지 생성", icon: "🖋️" },
-    { path: "/img2img", label: "이미지 변형", icon: "🖼️" },
-    { path: "/inpainting", label: "이미지 복원", icon: "🩹" },
+    { path: "/generate", label: "이미지 생성", icon: "🖋️" },
+    { path: "/inpainting", label: "이미지 수정", icon: "🩹" },
   ];
 
   return (
-    <aside className="flex h-full w-20 flex-col items-center border-r bg-gray-100 py-4">
+    <aside className="bg-base-300 flex h-10 w-full flex-row items-center justify-center border-r-2 border-b border-gray-800 lg:h-full lg:w-15 lg:flex-col">
       {menu.map(({ path, label, icon }) => (
-        <NavLink
-          key={path}
-          to={path}
-          className={({ isActive }) =>
-            `mb-6 text-2xl ${isActive ? "text-blue-500" : "text-gray-500"}`
-          }
-          title={label}
-        >
+        <NavLink key={path} to={path} className={() => `mb-6`} title={label}>
           {icon}
         </NavLink>
       ))}

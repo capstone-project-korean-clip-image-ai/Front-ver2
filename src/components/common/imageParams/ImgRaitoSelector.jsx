@@ -11,15 +11,14 @@ const ImgRatioSelector = ({ ratio, setRatio }) => {
   };
 
   return (
-    <div className="mb-4">
-      <label className="mb-1 block text-sm font-medium">이미지 비율</label>
+    <div className="flex-1">
       <select
         value={ratio}
         onChange={handleChange}
-        className="mt-2 rounded-md border border-gray-300 bg-gray-500 p-2"
+        className="select bg-base-100 hover:bg-base-300 flex h-full w-full items-center gap-2 rounded-lg border border-gray-600 p-2 shadow-md"
       >
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
+          <option className="bg-base-100" key={opt.value} value={opt.value}>
             {opt.label}
           </option>
         ))}

@@ -1,10 +1,32 @@
 import { useState } from "react";
+import { objectDetect } from "../services/api";
 import { eraseObject, redrawObject } from "../services/api";
 
 const useInpaint = () => {
+  const [masks, setMasks] = useState([]);
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const detect = async (file, coords) => {
+      if (!file || !coords) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const form = new FormData();
+        form.append("file", file);
+        form.append("x", coords.x);
+        form.append("y", coords.y);
+  
+        const res = await objectDetect(form);
+        const items = res.data.results || [];
+        setMasks(items.map((i) => i.url));
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   const erase = async (imageFile, maskBlob) => {
     setLoading(true);
@@ -43,7 +65,7 @@ const useInpaint = () => {
     }
   };
 
-  return { urls, loading, error, erase, redraw };
+  return { masks, loading, detect, erase, redraw, urls, error };
 };
 
 export default useInpaint;

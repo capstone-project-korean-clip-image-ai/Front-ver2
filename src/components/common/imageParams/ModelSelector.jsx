@@ -8,10 +8,10 @@ const ModelSelector = ({ modelOptions, model, setModel }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="flex-1 w-full">
       <button
         onClick={toggleDropdown}
-        className="flex items-center gap-2 rounded-lg border p-2 shadow-md hover:bg-gray-100"
+        className="flex w-full h-full bg-base-100 items-center gap-2 rounded-lg border border-gray-600 p-2 shadow-md hover:bg-base-300"
       >
         <img
           src={modelOptions.find((m) => m.value === model)?.thumbnail}
