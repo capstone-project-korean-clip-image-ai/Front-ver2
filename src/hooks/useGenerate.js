@@ -48,6 +48,8 @@ const useGenerate = () => {
         res = await generateImg2ImgStyle(form);
       } else if (img2imgMode === "face") {
         res = await generateImg2ImgFace(form);
+      } else {
+        throw new Error(`Invalid img2imgMode: ${img2imgMode}`);
       }
 
       const items = res.data.results || [];
