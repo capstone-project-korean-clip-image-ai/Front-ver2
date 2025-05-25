@@ -1,13 +1,11 @@
 import { useCallback, useRef, useState, useEffect } from "react";
 import { Stage, Layer, Image as KonvaImage, Line } from "react-konva";
 import useImage from "use-image";
-import SingleImageUploadInput from "../common/SingleImageUploadInput";
 
-const ImageUploaderDraw = ({ onUpload, loading, onRefReady }) => {
+const ImageUploaderDraw = ({ originImage, onRefReady, loading }) => {
   const containerRef = useRef(null);
   const stageRef = useRef(null);
-  const [imgUrl, setImgUrl] = useState(null);
-  const [image] = useImage(imgUrl);
+  const [image] = useImage(originImage);
   const [imageSize, setImageSize] = useState({ width: 512, height: 512 });
   const [originalSize, setOriginalSize] = useState({ width: 512, height: 512 });
 
@@ -15,16 +13,6 @@ const ImageUploaderDraw = ({ onUpload, loading, onRefReady }) => {
   const [isErasing, setIsErasing] = useState(false);
   const [lines, setLines] = useState([]);
   const [brushSize, setBrushSize] = useState(40);
-
-  const handleUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file || !file.type.startsWith("image/")) return;
-
-    const url = URL.createObjectURL(file);
-    setImgUrl(url);
-    setLines([]);
-    onUpload?.(file);
-  };
 
   useEffect(() => {
     if (image) {
@@ -58,6 +46,7 @@ const ImageUploaderDraw = ({ onUpload, loading, onRefReady }) => {
   }, [image]);
 
   const handleMouseDown = (e) => {
+    if (loading) return;
     setIsDrawing(true);
     const pos = e.target.getStage().getPointerPosition();
     const percentX = pos.x / imageSize.width;
@@ -73,6 +62,7 @@ const ImageUploaderDraw = ({ onUpload, loading, onRefReady }) => {
   };
 
   const handleMouseMove = (e) => {
+    if (loading) return;
     if (!isDrawing) return;
     const stage = e.target.getStage();
     const point = stage.getPointerPosition();
@@ -166,64 +156,77 @@ const ImageUploaderDraw = ({ onUpload, loading, onRefReady }) => {
   }, [onRefReady, getMaskData]);
 
   return (
-    <div className="w-full max-w-xl border p-4">
-      <SingleImageUploadInput
-        label="직접 마스킹할 이미지 선택"
-        onChange={handleUpload}
-        disabled={loading}
-        loading={loading}
-      />
-
-      {imgUrl && image && (
-        <div className="mt-4 flex flex-col gap-4">
+    <div className="w-full p-4">
+      {originImage && image && (
+        <div className="flex flex-col gap-4">
           <p className="text-sm">수정하고 싶은 영역을 그려주세요</p>
 
           <div
             ref={containerRef}
-            className="relative mx-auto flex aspect-square min-h-[512px] w-full items-center justify-center overflow-hidden border bg-transparent"
+            className={`relative mx-auto flex aspect-square w-full ${
+              loading ? "cursor-wait" : "cursor-crosshair"
+            } items-center justify-center overflow-hidden rounded-md border border-gray-600 shadow-md`}
           >
-            <Stage
-              width={imageSize.width}
-              height={imageSize.height}
-              onMouseDown={handleMouseDown}
-              onMousemove={handleMouseMove}
-              onMouseup={handleMouseUp}
-              ref={stageRef}
-            >
-              <Layer>
-                <KonvaImage
-                  image={image}
-                  width={imageSize.width}
-                  height={imageSize.height}
-                />
-              </Layer>
-              <Layer id="maskLayer">
-                {lines.map((line, i) => (
-                  <Line
-                    key={i}
-                    points={line.points.map((p, i) =>
-                      i % 2 === 0 ? p * imageSize.width : p * imageSize.height,
-                    )}
-                    stroke={
-                      line.tool === "eraser"
-                        ? "rgba(0,0,0,1)"
-                        : "rgba(0,128,255,0.5)"
-                    }
-                    strokeWidth={line.strokeWidth || brushSize}
-                    tension={0.5}
-                    lineCap="round"
-                    globalCompositeOperation={
-                      line.tool === "eraser" ? "destination-out" : "source-over"
-                    }
+            <div className="absolute inset-0 overflow-hidden">
+              <img
+                src={originImage}
+                alt="배경"
+                className="h-full w-full object-cover blur-md brightness-50"
+              />
+            </div>
+            <div className="relative z-10">
+              <Stage
+                width={imageSize.width}
+                height={imageSize.height}
+                onMouseDown={handleMouseDown}
+                onMousemove={handleMouseMove}
+                onMouseup={handleMouseUp}
+                ref={stageRef}
+              >
+                <Layer>
+                  <KonvaImage
+                    image={image}
+                    width={imageSize.width}
+                    height={imageSize.height}
                   />
-                ))}
-              </Layer>
-            </Stage>
+                </Layer>
+                <Layer id="maskLayer">
+                  {lines.map((line, i) => (
+                    <Line
+                      key={i}
+                      points={line.points.map((p, i) =>
+                        i % 2 === 0
+                          ? p * imageSize.width
+                          : p * imageSize.height,
+                      )}
+                      stroke={
+                        line.tool === "eraser"
+                          ? "rgba(0,0,0,1)"
+                          : "rgba(0,128,255,0.5)"
+                      }
+                      strokeWidth={line.strokeWidth || brushSize}
+                      tension={0.5}
+                      lineCap="round"
+                      globalCompositeOperation={
+                        line.tool === "eraser"
+                          ? "destination-out"
+                          : "source-over"
+                      }
+                    />
+                  ))}
+                </Layer>
+              </Stage>
+            </div>
+            {loading && (
+              <div className="absolute inset-0 z-30 flex items-center justify-center rounded-md bg-black/70">
+                <span className="loading loading-spinner loading-xl"></span>
+              </div>
+            )}
           </div>
-
+          <div className="divider m-0"></div>
           <div className="flex flex-col gap-6 px-1">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t pt-3">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
                 <label htmlFor="brush-range">브러시 크기</label>
                 <input
                   id="brush-range"
@@ -232,8 +235,9 @@ const ImageUploaderDraw = ({ onUpload, loading, onRefReady }) => {
                   max="100"
                   step="10"
                   value={brushSize}
+                  disabled={loading}
                   onChange={(e) => setBrushSize(Number(e.target.value))}
-                  className="range range-xs"
+                  className="range range-primary range-xs"
                 />
                 <span>{brushSize}px</span>
               </div>
@@ -242,12 +246,18 @@ const ImageUploaderDraw = ({ onUpload, loading, onRefReady }) => {
                 <input
                   type="checkbox"
                   checked={isErasing}
+                  disabled={loading}
+                  className="checkbox checkbox-primary"
                   onChange={(e) => setIsErasing(e.target.checked)}
                 />
                 지우개 모드
               </label>
 
-              <button onClick={handleReset} className="btn btn-sm btn-outline">
+              <button
+                onClick={handleReset}
+                className="btn btn-outline btn-primary"
+                disabled={loading}
+              >
                 마스킹 초기화
               </button>
             </div>

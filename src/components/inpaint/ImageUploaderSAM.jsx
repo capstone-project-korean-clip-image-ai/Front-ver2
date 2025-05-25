@@ -1,25 +1,12 @@
 import { useState, useRef } from "react";
-import SingleImageUploadInput from "../common/SingleImageUploadInput";
 
-const ImageUploaderSAM = ({ onDetect, loading }) => {
-  const [image, setImage] = useState(null);
+const ImageUploaderSAM = ({ image, onDetect, loading }) => {
   const [marker, setMarker] = useState(null);
-  const [imageCoords, setImageCoords] = useState(null);
   const imgRef = useRef(null);
   const containerRef = useRef(null);
 
-  const handleChange = (event) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      const src = URL.createObjectURL(file);
-      setImage({ file, src });
-      setMarker(null);
-    } else {
-      alert("이미지 파일만 업로드 가능합니다.");
-    }
-  };
-
   const handleImageClick = (e) => {
+    if (loading) return; // disable click when loading
     const img = imgRef.current;
     const container = containerRef.current;
 
@@ -79,46 +66,42 @@ const ImageUploaderSAM = ({ onDetect, loading }) => {
     const imgY = Math.round(relativeY * naturalHeight);
 
     // 11. 마커 위치 저장
-    setMarker({ x: clickX, y: clickY }); // 화면 박스 내 좌표
-    setImageCoords({ x: imgX, y: imgY }); // 원본 이미지 내 좌표
-    // console.log(`이미지 내부 좌표: (${imgX}, ${imgY})`);
-  };
-
-  const handleDetectClick = () => {
-    if (!image || !imageCoords) {
-      alert("이미지 업로드와 객체 클릭을 완료해주세요.");
-      return;
-    }
-
-    onDetect?.(image.file, imageCoords);
+    setMarker({ x: clickX, y: clickY }); // 화면 좌표
+    const coords = { x: imgX, y: imgY }; // 원본 이미지 좌표
+    // 클릭된 좌표를 즉시 부모로 전달
+    onDetect?.(coords);
   };
 
   return (
-    <div className="w-full max-w-xl border p-4">
-      <SingleImageUploadInput
-        label="이미지 업로드"
-        onChange={handleChange}
-        disabled={loading}
-        loading={loading}
-      />
-
-      {image?.src && (
-        <div className="mt-4 flex flex-col gap-4">
-          <p className="text-sm">수정하고 싶은 영역을 클릭해주세요</p>
+    <div className="w-full p-4">
+      {image && (
+        <div className="flex flex-col gap-4">
+          <p className="text-sm">수정하고 싶은 부분을 클릭해주세요</p>
           <div
             ref={containerRef}
-            className="relative mx-auto flex aspect-square w-full cursor-crosshair items-center justify-center overflow-hidden border bg-transparent"
+            className={`relative mx-auto flex aspect-square w-full ${
+              loading ? "cursor-wait" : "cursor-crosshair"
+            } items-center justify-center overflow-hidden rounded-md border border-gray-600 shadow-md`}
             onClick={handleImageClick}
           >
-            <img
-              ref={imgRef}
-              src={image.src}
-              alt="미리보기"
-              className="h-full w-full object-contain"
-            />
+            <div className="absolute h-full w-full overflow-hidden">
+              <img
+                src={image}
+                alt="배경"
+                className="h-full w-full object-cover blur-md brightness-50"
+              />
+            </div>
+            <div className="relative z-10 flex h-full items-center justify-center">
+              <img
+                ref={imgRef}
+                src={image}
+                alt="업로드된 이미지"
+                className="h-full w-full object-contain"
+              />
+            </div>
 
             <div
-              className="absolute h-3 w-3 rounded-full border border-white bg-red-500"
+              className="absolute z-20 h-3 w-3 rounded-full border border-white bg-red-500"
               style={
                 marker
                   ? {
@@ -134,14 +117,12 @@ const ImageUploaderSAM = ({ onDetect, loading }) => {
                     }
               }
             />
+            {loading && (
+              <div className="absolute inset-0 z-30 flex items-center justify-center rounded-md bg-black/70">
+                <span className="loading loading-spinner loading-xl"></span>
+              </div>
+            )}
           </div>
-
-          <button
-            className="btn btn-success self-end"
-            onClick={handleDetectClick}
-          >
-            객체 탐지
-          </button>
         </div>
       )}
     </div>

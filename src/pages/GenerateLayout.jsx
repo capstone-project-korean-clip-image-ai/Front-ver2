@@ -7,13 +7,13 @@ const GenerateLayout = () => {
   const { logs, fetchLogs, removeLog } = useImageLogs();
 
   return (
-    <main className="flex h-screen">
+    <main className="flex h-screen flex-col lg:flex-row">
       <Sidebar />
-      <div className="flex flex-1">
-        <div className="w-2/5 overflow-y-auto bg-gray-900 p-6 text-white">
+      <div className="flex flex-1 flex-col lg:flex-row">
+        <div className="bg-base-300 text-white lg:w-1/3 lg:overflow-y-auto">
           <Outlet context={{ onGenerate: fetchLogs }} />
         </div>
-        <div className="bg-base-100 flex-1 overflow-y-auto border-l p-6">
+        <div className="bg-neutral border-l-2 border-gray-800 lg:w-2/3 lg:overflow-y-auto">
           <ImageLog logs={logs} onRefresh={fetchLogs} onDelete={removeLog} />
         </div>
       </div>
