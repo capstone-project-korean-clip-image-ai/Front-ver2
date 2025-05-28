@@ -3,7 +3,7 @@ import { generateTxt2Img } from "../services/api";
 import { generateImg2ImgEdge } from "../services/api";
 import { generateImg2ImgPose } from "../services/api";
 import { generateImg2ImgStyle } from "../services/api";
-import { generateImg2ImgFace } from "../services/api";
+import { generateImg2ImgStrain } from "../services/api";
 
 const useGenerate = () => {
   const [urls, setUrls] = useState([]);
@@ -31,7 +31,9 @@ const useGenerate = () => {
     try {
       const response = await fetch(uploadimage);
       if (!response.ok) {
-        throw new Error(`Blob URL로부터 이미지를 가져오는 데 실패했습니다: ${response.statusText}`);
+        throw new Error(
+          `Blob URL로부터 이미지를 가져오는 데 실패했습니다: ${response.statusText}`,
+        );
       }
       const imageBlob = await response.blob();
 
@@ -46,8 +48,6 @@ const useGenerate = () => {
         res = await generateImg2ImgPose(form);
       } else if (img2imgMode === "style") {
         res = await generateImg2ImgStyle(form);
-      } else if (img2imgMode === "face") {
-        res = await generateImg2ImgFace(form);
       } else {
         throw new Error(`Invalid img2imgMode: ${img2imgMode}`);
       }
@@ -61,26 +61,36 @@ const useGenerate = () => {
     }
   };
 
-  // const strain = async (uploadimage) => {
-  //   setLoading(true);
-  //   setError(null);
+  const strain = async (filter, imgNum, uploadimage) => {
+    setLoading(true);
+    setError(null);
 
-  //   try {
-  //     const form = new FormData();
-  //     form.append("image", uploadimage);
-  //     let res;
+    try {
+      const response = await fetch(uploadimage);
+      if (!response.ok) {
+        throw new Error(
+          `Blob URL로부터 이미지를 가져오는 데 실패했습니다: ${response.statusText}`,
+        );
+      }
+      const imageBlob = await response.blob();
+      const form = new FormData();
+      form.append("filter", filter);
+      form.append("imgNum", imgNum);
+      form.append("image", imageBlob);
 
-  //     res = await generateImg2ImgStrain(form);
-      
-  //     const items = res.data.results || [];
-  //     setUrls(items.map((item) => item.url));
-  //   } catch (err) {
-  //     setError(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      let res;
 
-  return { urls, loading, error, generate, modify };
+      res = await generateImg2ImgStrain(form);
+
+      const items = res.data.results || [];
+      setUrls(items.map((item) => item.url));
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { urls, loading, error, generate, modify, strain };
 };
 export default useGenerate;

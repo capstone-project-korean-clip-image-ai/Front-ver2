@@ -43,9 +43,9 @@ export const generateImg2ImgStyle = (formData) =>
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-// Img2Img face
-export const generateImg2ImgFace = (formData) =>
-  api.post("/img2img/face", formData, {
+// Img2Img filter
+export const generateImg2ImgStrain = (formData) =>
+  api.post("/img2img/filter", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 

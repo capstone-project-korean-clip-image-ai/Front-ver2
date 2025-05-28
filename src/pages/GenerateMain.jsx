@@ -39,9 +39,7 @@ const GenerateMain = () => {
     }
   }, [previewUrl, advancedOpened]);
 
-  // const [filter, setFilter] = useState("");
-
-  const { urls, loading, error, generate, modify } = useGenerate();
+  const { urls, loading, error, generate, modify, strain } = useGenerate();
   const { onGenerate } = useOutletContext();
 
   const modelOptions = [
@@ -122,44 +120,46 @@ const GenerateMain = () => {
   };
 
   // IMG2IMG - Filter
-  // const handleFilter = async () => {
-  //   if (img2imgMode !== "filter") {
-  //     alert("필터 모드가 아닙니다.");
-  //     return;
-  //   }
-  //   if (previewUrl === null) {
-  //     alert("이미지를 업로드 하지 않았습니다.");
-  //     return;
-  //   }
-  //   if (filter === "") {
-  //     alert("필터를 선택해주세요.");
-  //     return;
-  //   }
+  const handleFilter = async () => {
+    if (img2imgMode !== "filter") {
+      alert("필터 모드가 아닙니다.");
+      return;
+    }
+    if (previewUrl === null) {
+      alert("이미지를 업로드 하지 않았습니다.");
+      return;
+    }
+    if (filter === "") {
+      alert("필터를 선택해주세요.");
+      return;
+    }
 
-  //   await strain(previewUrl);
+    await strain(filter, imgNum, previewUrl);
 
-  //   onGenerate();
-  //   if (error) {
-  //     console.error("Error generating image:", error);
-  //   } else {
-  //     console.log("Generated URLs:", urls);
-  //   }
-  // };
+    onGenerate();
+    if (error) {
+      console.error("Error generating image:", error);
+    } else {
+      console.log("Generated URLs:", urls);
+    }
+  };
 
   const handlePush = async () => {
     if (loading) return;
-    
-    if ((previewUrl === null) && (img2imgMode !== "filter")) { // TXT2IMG
+
+    if (previewUrl === null && img2imgMode !== "filter") {
+      // TXT2IMG
       handleGenerate();
-    } else if ((previewUrl !== null) && (img2imgMode !== "filter")) { // IMG2IMG (not filter mode)
+    } else if (previewUrl !== null && img2imgMode !== "filter") {
+      // IMG2IMG (not filter mode)
       handleModify();
+    } else if (previewUrl !== null && img2imgMode === "filter") {
+      // Filter mode
+      handleFilter();
     } else {
       alert("이미지를 업로드 하거나 작업 방식을 선택해주세요.");
       return;
     }
-    // } else if ((previewUrl !== null) && (img2imgMode === "filter")) { // Filter mode
-    //   handleFilter()
-    // }
   };
 
   const handleChange = (event) => {
@@ -177,7 +177,7 @@ const GenerateMain = () => {
 
   const handleFilterSelect = (selectedFilter) => {
     setFilter(selectedFilter);
-  }
+  };
 
   const generateBlockProps = {
     prompt,
@@ -208,7 +208,11 @@ const GenerateMain = () => {
             onToggleAdvanced={setAdvancedOpened}
           />
         ) : (
-          <FilterSelector filter={filter} setFilter={setFilter} onSelect={handleFilterSelect} />
+          <FilterSelector
+            filter={filter}
+            setFilter={setFilter}
+            onSelect={handleFilterSelect}
+          />
         )}
         <div className="bg-base-800 flex flex-col gap-4 p-4">
           <div className="flex flex-row gap-x-2">
@@ -232,7 +236,7 @@ const GenerateMain = () => {
             <div className="flex items-center">
               <button
                 onClick={() => handleCancel()}
-                className="btn btn-error btn-outline btn-square text-xl rounded-lg"
+                className="btn btn-error btn-outline btn-square rounded-lg text-xl"
                 title="이미지 업로드 취소"
               >
                 ✕
