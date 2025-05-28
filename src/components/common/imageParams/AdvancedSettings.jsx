@@ -9,10 +9,11 @@ const AdvancedSettings = ({ advancedOptions, setAdvancedOptions }) => {
 
   return (
     <div className="advanced-settings z-10 space-y-2">
-      <div className="input-form space-y-4 mb-4">
+      <div className="input-form mb-4 space-y-4">
         <p className="text-md font-medium text-white"> 부정 프롬프트 </p>
         <textarea
           id="prompt-input"
+          name="negative_prompt"
           className="textarea w-full"
           value={advancedOptions.negative_prompt}
           onChange={handleChange}

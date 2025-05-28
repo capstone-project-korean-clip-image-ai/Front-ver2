@@ -3,7 +3,6 @@ const ModeSelector = ({ img2imgMode, setImg2imgMode }) => {
     { value: "style", label: "화풍" },
     { value: "edge", label: "형태" },
     { value: "pose", label: "포즈" },
-    { value: "face", label: "얼굴" },
     { value: "filter", label: "대상" },
   ];
   return (
