@@ -43,6 +43,22 @@ const ImageLog = ({ logs, onRefresh, onDelete }) => {
                 </div>
                 <div className="flex flex-row justify-start gap-4 font-bold">
                   <div className="badge badge-primary badge-outline text-md flex flex-row">
+                    {(log.type === "img2img" || log.type === "inpainting") && (
+                      <div className="group relative z-50 mr-1 flex items-center overflow-visible">
+                        {/* 작은 썸네일 */}
+                        <img
+                          src={log.originalImage}
+                          alt="원본 이미지"
+                          className="h-6 w-6 rounded-full ring ring-primary object-cover"
+                        />
+                        {/* hover 시 확장된 이미지 */}
+                        <img
+                          src={log.originalImage}
+                          alt="확대된 원본 이미지"
+                          className="border-base-100 absolute top-full left-full z-50 mt-2 ml-2 hidden max-h-48 w-auto max-w-48 transform rounded-md border-4 object-contain shadow-lg group-hover:block"
+                        />
+                      </div>
+                    )}
                     {log.type && <div className="uppercase">{log.type}</div>}
                     {log.subType && (
                       <div className="capitalize"> - {log.subType}</div>

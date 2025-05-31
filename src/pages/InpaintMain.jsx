@@ -49,11 +49,6 @@ const InpaintMain = () => {
 
   const inpaintModels = [
     {
-      value: "base",
-      label: "Stable Diffusion 1.5",
-      thumbnail: "/models/Stable_diffusion_1.5.png",
-    },
-    {
       value: "DreamShaper",
       label: "DreamShaper",
       thumbnail: "/models/Dreamshaper.png",
@@ -237,13 +232,6 @@ const InpaintMain = () => {
                 onRefReady={setDrawRef}
                 loading={loading}
               />
-            </div>
-          )}
-          {maskingMode === "search" && (
-            <div className="flex flex-col items-center justify-center p-4">
-              <p className="text-sm text-gray-500">
-                이 기능은 현재 개발 중입니다.
-              </p>
             </div>
           )}
           {(maskingMode === "drawing" ||

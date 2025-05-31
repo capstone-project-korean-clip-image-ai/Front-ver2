@@ -2,7 +2,6 @@ const MaskingModeSelector = ({ maskingMode, setMaskingMode }) => {
   const modes = [
     { value: "sam", label: "탐지" },
     { value: "drawing", label: "그리기" },
-    { value: "search", label: "검색" },
   ];
 
   return (
