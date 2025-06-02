@@ -8,7 +8,6 @@ const LoraSelector = ({ lora, setLora }) => {
     { value: "hansik", label: "한식 LoRA", thumbnail: "/loras/hansik.png", desc: "한식 스타일 LoRA \n 한식 이미지 생성에 \n 최적화 되어있습니다." },
   ];
 
-  const modalId = useId();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
