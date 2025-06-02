@@ -47,21 +47,25 @@ const GenerateMain = () => {
       value: "InsaneRealistic",
       label: "InsaneRealistic",
       thumbnail: "/models/InsaneRealistic.png",
+      desc: "고해상도,사실적인\n 이미지 생성 모델\n인물, 풍경 등 리얼리즘\n 스타일에 적합합니다.",
     },
     {
       value: "DreamShaper",
       label: "DreamShaper",
       thumbnail: "/models/Dreamshaper.png",
+      desc: "몽환적이고, 예술적인\n 이미지 생성 모델\n창의적인 일러스트,\n 아트웍에 추천됩니다.",
     },
     {
       value: "ToonYou",
       label: "ToonYou",
       thumbnail: "/models/ToonYou.png",
+      desc: "만화, 애니메이션\n 이미지 생성 모델\n애니메이션, 웹툰\n 작업에 적합합니다.",
     },
     {
       value: "PastelMix",
       label: "PastelMix",
       thumbnail: "/models/PastelMix.png",
+      desc: "파스텔톤의 감성적인\n 이미지 생성 모델\n일러스트, 소프트한 \n분위기에 어울립니다.",
     },
   ];
 
