@@ -13,7 +13,7 @@ const GenerateMain = () => {
 
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState("DreamShaper");
-  const [lora, setLora] = useState("none");
+  const [loras, setLoras] = useState([]);
   const [imgNum, setImgNum] = useState(4);
   const [ratio, setRatio] = useState("512x512");
   const [width, height] = ratio.split("x").map(Number);
@@ -79,7 +79,7 @@ const GenerateMain = () => {
     await generate({
       prompt,
       model,
-      lora,
+      loras,
       imgNum,
       width,
       height,
@@ -108,7 +108,7 @@ const GenerateMain = () => {
     const params = {
       prompt,
       model,
-      lora,
+      loras,
       imgNum,
       width,
       height,
@@ -189,8 +189,8 @@ const GenerateMain = () => {
     modelOptions: modelOptions,
     model,
     setModel,
-    lora,
-    setLora,
+    loras,
+    setLoras,
     advancedOptions,
     setAdvancedOptions,
   };

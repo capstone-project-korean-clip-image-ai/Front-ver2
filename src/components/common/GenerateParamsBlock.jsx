@@ -10,8 +10,8 @@ const GenerateParamsBlock = ({
   modelOptions,
   model,
   setModel,
-  lora,
-  setLora,
+  loras,
+  setLoras,
   advancedOptions,
   setAdvancedOptions,
 }) => {
@@ -27,7 +27,7 @@ const GenerateParamsBlock = ({
           model={model}
           setModel={setModel}
         />
-        <LoraSelector lora={lora} setLora={setLora} />
+        <LoraSelector loras={loras} setLoras={setLoras} />
       </div>
 
       {/* 고급 옵션 드롭다운 */}
@@ -37,7 +37,6 @@ const GenerateParamsBlock = ({
           className="select bg-base-100 hover:bg-base-300 flex w-full items-center justify-between rounded-md border border-gray-600 p-2 shadow-sm"
         >
           <span className="text-sm font-medium">고급 옵션</span>
-          
         </button>
         {showAdvanced && (
           <div className="bg-base-200 mt-2 w-full rounded-md border border-gray-600 p-4">

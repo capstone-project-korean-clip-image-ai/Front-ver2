@@ -14,7 +14,8 @@ const useGenerate = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await generateTxt2Img(params);
+      // 다중 LoRA params 지원
+      const res = await generateTxt2Img({ ...params, loras: params.loras });
       const items = res.data.results || [];
       setUrls(items.map((item) => item.url));
     } catch (err) {
@@ -38,7 +39,7 @@ const useGenerate = () => {
       const imageBlob = await response.blob();
 
       const form = new FormData();
-      form.append("data", JSON.stringify(params));
+      form.append("data", JSON.stringify({ ...params, loras: params.loras }));
       form.append("image", imageBlob);
       let res;
 

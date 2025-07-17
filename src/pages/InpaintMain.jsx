@@ -33,8 +33,8 @@ const InpaintMain = () => {
 
   // 프롬프트 및 모델 관련 상태 관리
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState("base");
-  const [lora, setLora] = useState("none");
+  const [model, setModel] = useState("DreamShaper");
+  const [loras, setLoras] = useState([]);
   const [imgNum, setImgNum] = useState(1);
   const [advancedOptions, setAdvancedOptions] = useState({
     negative_prompt: "",
@@ -163,7 +163,7 @@ const InpaintMain = () => {
     const params = {
       prompt,
       model,
-      lora,
+      loras,
       imgNum,
       ...advancedOptions,
     };
@@ -189,7 +189,7 @@ const InpaintMain = () => {
           <div className="flex items-center">
             <button
               onClick={() => handleCancel()}
-              className="btn btn-error btn-outline btn-square text-xl rounded-lg"
+              className="btn btn-error btn-outline btn-square rounded-lg text-xl"
               title="이미지 업로드 취소"
             >
               ✕
@@ -253,8 +253,8 @@ const InpaintMain = () => {
                     modelOptions={inpaintModels}
                     model={model}
                     setModel={setModel}
-                    lora={lora}
-                    setLora={setLora}
+                    loras={loras}
+                    setLoras={setLoras}
                     imgNum={imgNum}
                     setImgNum={setImgNum}
                     advancedOptions={advancedOptions}

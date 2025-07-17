@@ -69,9 +69,9 @@ const ImageLog = ({ logs, onRefresh, onDelete }) => {
                       {log.model}
                     </div>
                   )}
-                  {log.lora && (
+                  {log.loras.length > 0 && (
                     <div className="badge badge-outline badge-warning capitalize">
-                      {log.lora}
+                      {log.loras.join(", ")}
                     </div>
                   )}
                 </div>

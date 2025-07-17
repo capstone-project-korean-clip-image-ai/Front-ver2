@@ -9,24 +9,24 @@ const useInpaint = () => {
   const [error, setError] = useState(null);
 
   const detect = async (file, coords) => {
-      if (!file || !coords) return;
-      setLoading(true);
-      setError(null);
-      try {
-        const form = new FormData();
-        form.append("file", file);
-        form.append("x", coords.x);
-        form.append("y", coords.y);
-  
-        const res = await objectDetect(form);
-        const items = res.data.results || [];
-        setMasks(items.map((i) => i.url));
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!file || !coords) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("x", coords.x);
+      form.append("y", coords.y);
+
+      const res = await objectDetect(form);
+      const items = res.data.results || [];
+      setMasks(items.map((i) => i.url));
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const erase = async (imageFile, maskBlob) => {
     setLoading(true);
@@ -51,7 +51,8 @@ const useInpaint = () => {
     setError(null);
     try {
       const form = new FormData();
-      form.append("data", JSON.stringify(params));
+      // 다중 LoRA 전달
+      form.append("data", JSON.stringify({ ...params, loras: params.loras }));
       form.append("image", imageFile);
       form.append("mask", maskBlob);
 
